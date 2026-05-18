@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ramanandar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #020914;
+      --surface: rgba(10, 25, 55, 0.65);
+      --surface-hover: rgba(15, 40, 85, 0.85);
+      --blue-glow: #1a6fff;
+      --blue-bright: #4da3ff;
+      --blue-soft: #a8cfff;
+      --accent: #00d4ff;
+      --text: #e8f4ff;
+      --muted: #7aaccc;
+      --border: rgba(77, 163, 255, 0.2);
+      --border-hover: rgba(77, 163, 255, 0.55);
+    }
+
+    html, body {
+      height: 100%;
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'Outfit', sans-serif;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,111,255,0.22) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,212,255,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 10% 70%, rgba(26,111,255,0.08) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 60px 20px 50px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin-bottom: 24px;
+      animation: fadeDown 0.7s ease both;
+    }
+
+    .avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0b2a6b 0%, #0a1a40 50%, #061030 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--blue-bright);
+      letter-spacing: -1px;
+      border: 2px solid rgba(77, 163, 255, 0.5);
+      box-shadow: 0 0 16px rgba(77,163,255,0.4), 0 0 40px rgba(26,111,255,0.15);
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+
+    .name {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(22px, 6vw, 34px);
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--blue-soft) 0%, var(--accent) 50%, var(--blue-bright) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeDown 0.8s 0.1s ease both;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 400;
+      animation: fadeDown 0.8s 0.2s ease both;
+      margin-bottom: 10px;
+    }
+
+    .divider {
+      width: 50px;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, var(--blue-glow), var(--accent), var(--blue-glow), transparent);
+      margin: 14px auto 36px;
+      animation: fadeDown 0.8s 0.25s ease both;
+    }
+
+    .links {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--text);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .link-card:nth-child(1) { animation-delay: 0.3s; }
+    .link-card:nth-child(2) { animation-delay: 0.4s; }
+    .link-card:nth-child(3) { animation-delay: 0.5s; }
+    .link-card:nth-child(4) { animation-delay: 0.6s; }
+
+    .link-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(77,163,255,0.08) 0%, rgba(0,212,255,0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .link-card:hover {
+      border-color: var(--border-hover);
+      background: var(--surface-hover);
+      transform: translateY(-3px) scale(1.015);
+      box-shadow: 0 8px 32px rgba(26,111,255,0.22), 0 0 0 1px rgba(77,163,255,0.3);
+    }
+
+    .link-card:hover::before { opacity: 1; }
+
+    .icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 22px;
+    }
+
+    .icon-bili  { background: linear-gradient(135deg, #00a1d6 0%, #00c9ff 100%); }
+    .icon-yt    { background: linear-gradient(135deg, #c00 0%, #ff4444 100%); }
+    .icon-ig    { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
+    .icon-bstat { background: linear-gradient(135deg, #1a6fff 0%, #00d4ff 100%); }
+
+    .link-info { flex: 1; min-width: 0; }
+
+    .link-name {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+      color: var(--text);
+    }
+
+    .link-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .arrow {
+      color: var(--blue-bright);
+      font-size: 16px;
+      opacity: 0.6;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      flex-shrink: 0;
+    }
+    .link-card:hover .arrow { transform: translateX(4px); opacity: 1; }
+
+    footer {
+      margin-top: 48px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(122,172,204,0.4);
+      text-transform: uppercase;
+      animation: fadeUp 0.7s 0.8s ease both;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 16px rgba(77,163,255,0.4), 0 0 40px rgba(26,111,255,0.15); }
+      50%       { box-shadow: 0 0 28px rgba(77,163,255,0.7), 0 0 60px rgba(26,111,255,0.3); }
+    }
+
+    svg { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="stars"></canvas>
+
+  <div class="page">
+
+    <div class="avatar-wrap">
+      <div class="avatar">R</div>
+    </div>
+
+    <div class="name">Ramanandar</div>
+    <div class="subtitle">Content Creator</div>
+    <div class="divider"></div>
+
+    <div class="links">
+
+      <!-- Bilibili -->
+      <a class="link-card" href="https://bili.im/dGgqj07" target="_blank" rel="noopener">
+        <div class="icon-box icon-bili">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+            <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L8.12 3.906h7.76l1.32-1.26c.267-.249.573-.373.92-.373.347 0 .662.128.946.373.284.271.426.58.426.907 0 .324-.142.636-.426.907zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
+          </svg>
+        </div>
+        <div class="link-info">
+          <div class="link-name">Bilibili</div>
+          <div class="link-sub">Nandra · Akun Utama</div>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+
+      <!-- YouTube -->
+      <a class="link-card" href="https://youtube.com/@nandramv?si=PplsOf_nniEXna8M" target="_blank" rel="noopener">
+        <div class="icon-box icon-yt">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </div>
+        <div class="link-info">
+          <div class="link-name">YouTube</div>
+          <div class="link-sub">@nandramv</div>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+
+      <!-- Instagram -->
+      <a class="link-card" href="https://www.instagram.com/ramanandar_08?igsh=cDBxbjF5ZXh4eDgx" target="_blank" rel="noopener">
+        <div class="icon-box icon-ig">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+          </svg>
+        </div>
+        <div class="link-info">
+          <div class="link-name">Instagram</div>
+          <div class="link-sub">@ramanandar_08</div>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+
+      <!-- Bstation Ambassador -->
+      <a class="link-card" href="https://nandra-ambassador.vercel.app/" target="_blank" rel="noopener">
+        <div class="icon-box icon-bstat">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+            <path d="M12 1l2.753 8.472H23.5l-7.127 5.18 2.753 8.472L12 18.944l-7.127 5.18 2.754-8.472L.5 10.472h8.747z"/>
+          </svg>
+        </div>
+        <div class="link-info">
+          <div class="link-name">Bstation Ambassador</div>
+          <div class="link-sub">Ambassador Kreator · Nandra</div>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+
+    </div>
+
+    <footer>© 2026 Ramanandar</footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let W, H, stars = [];
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    function initStars(n) {
+      n = n || 120;
+      stars = [];
+      for (var i = 0; i < n; i++) {
+        stars.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 1.2 + 0.2,
+          a: Math.random(),
+          da: (Math.random() - 0.5) * 0.005,
+          hue: Math.random() > 0.7 ? 195 : 220,
+        });
+      }
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < stars.length; i++) {
+        var s = stars[i];
+        s.a = Math.max(0.05, Math.min(1, s.a + s.da));
+        if (s.a <= 0.05 || s.a >= 1) s.da *= -1;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'hsla(' + s.hue + ', 80%, 75%, ' + s.a + ')';
+        ctx.fill();
+      }
+      requestAnimationFrame(drawStars);
+    }
+
+    window.addEventListener('resize', function() { resize(); initStars(); });
+    resize(); initStars(); drawStars();
+  </script>
+</body>
+</html>
